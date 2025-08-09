@@ -21,24 +21,25 @@ def add_project(args):
     print(f"Project '{project.id}' created for user '{user.name}' with title '{project.title}' (due: {project.due_date})")
     
 
-# Function to add a task to a project
 def add_task(args):
     user = users.get(args.user)
-    if user is None:
+    if not user:
         print(f"User '{args.user}' does not exist.")
         return
-        
-    project = Project.get(args.project_id)
-    if project is None:
-        print(f"Project with ID '{args.project_id}' does not exist.")
+
+    # Make sure the project belongs to this user
+    project = next((p for p in user.projects if p.id == args.project_id), None)
+    if not project:
+        print(f"Project with ID '{args.project_id}' not found for user '{args.user}'.")
         return
-    
+
     task = project.add_task(
         title=args.title,
         status=args.status,
         assigned_to=user.id
     )
     print(f"Task created for project {project.id}: [{task.id}] {task.title} - {task.status}")
+
 
 #CLI Entry Point
 def main():
