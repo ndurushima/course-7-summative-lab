@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Nathan",
+      "email": "ndu@yahoo.com"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "title": "code",
+      "description": "add test",
+      "user_id": 1,
+      "due_date": "2025-08-09"
+    },
+    {
+      "id": 2,
+      "title": "final",
+      "description": "Capstone",
+      "user_id": 1,
+      "due_date": "2025-10-09"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "project_id": 1,
+      "title": "write unit tests",
+      "status": "todo",
+      "assigned_to": 1
+    },
+    {
+      "id": 2,
+      "project_id": 1,
+      "title": "test and debug",
+      "status": "todo",
+      "assigned_to": 1
+    }
+  ]
+}

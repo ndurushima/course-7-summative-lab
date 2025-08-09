@@ -1,44 +1,43 @@
 import argparse
 from models.project import Project
 from models.user import User
+from utils.storage import save, load
 
-#Global dictionary to store user projects and tasks
-users = {}
+def get_or_create_user(name: str, email: str) -> User:
+    # naive lookup by name; use your own key if different
+    for u in getattr(User, "all")():
+        if u.name == name:
+            return u
+    return User(name=name, email=email)
 
 # Function to add a project
 def add_project(args):
-    if args.user not in users:
-        # Create a new user if it doesn't exist
-        users[args.user] = User(name=args.user, email=args.email)
-
-    user = users[args.user]
+    load()
+    user = User.get(args.user) or User.create(name=args.user, email=args.email)
     project = Project.create(
         user_id=user.id,
         title=args.title,
         description=args.description,
         due_date=args.due_date
     )
+    save()
     print(f"Project '{project.id}' created for user '{user.name}' with title '{project.title}' (due: {project.due_date})")
     
 
-# Function to add a task to a project
 def add_task(args):
-    user = users.get(args.user)
-    if user is None:
+    load()
+    user = User.get(args.user)
+    if not user:
         print(f"User '{args.user}' does not exist.")
         return
-        
     project = Project.get(args.project_id)
-    if project is None:
-        print(f"Project with ID '{args.project_id}' does not exist.")
+    if not project or project.user_id != user.id:
+        print(f"Project with ID '{args.project_id}' not found for user '{args.user}'.")
         return
-    
-    task = project.add_task(
-        title=args.title,
-        status=args.status,
-        assigned_to=user.id
-    )
+    task = project.add_task(title=args.title, status=args.status, assigned_to=user.id)
+    save()
     print(f"Task created for project {project.id}: [{task.id}] {task.title} - {task.status}")
+
 
 #CLI Entry Point
 def main():
