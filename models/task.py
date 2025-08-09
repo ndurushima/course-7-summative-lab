@@ -4,7 +4,7 @@ if TYPE_CHECKING:
     from models.project import Project
 
 class Task:
-    _TASK: Dict[int, "Task"] = {}
+    _TASKS: Dict[int, "Task"] = {}
 
     def __init__(self, project_id: int, title: str, status: str, assigned_to: Optional[int] = None, id: Optional[int] = None):
         self.project_id = int(project_id)
@@ -25,9 +25,9 @@ class Task:
     
     @classmethod
     def get(cls, id: int) -> Optional["Task"]:
-        return cls._TASK.get(id)
+        return cls._TASKS.get(id)
     
     @classmethod
     def all(cls) -> List["Task"]:
-        return list(cls._TASK.values())
+        return list(cls._TASKS.values())
     

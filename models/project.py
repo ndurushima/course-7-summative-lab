@@ -46,3 +46,4 @@ class Project:
     @classmethod
     def all(cls) -> List["Project"]:
         return list(cls._PROJECTS.values())
+    

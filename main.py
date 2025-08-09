@@ -1,12 +1,21 @@
 import argparse
 from models.project import Project
 from models.user import User
+from utils.storage import save, load
 
 #Global dictionary to store user projects and tasks
 users = {}
 
+def get_or_create_user(name: str, email: str) -> User:
+    # naive lookup by name; use your own key if different
+    for u in getattr(User, "all")():
+        if u.name == name:
+            return u
+    return User(name=name, email=email)
+
 # Function to add a project
 def add_project(args):
+    load()
     if args.user not in users:
         # Create a new user if it doesn't exist
         users[args.user] = User(name=args.user, email=args.email)
@@ -18,10 +27,12 @@ def add_project(args):
         description=args.description,
         due_date=args.due_date
     )
+    save()
     print(f"Project '{project.id}' created for user '{user.name}' with title '{project.title}' (due: {project.due_date})")
     
 
 def add_task(args):
+    load()
     user = users.get(args.user)
     if not user:
         print(f"User '{args.user}' does not exist.")
@@ -38,6 +49,7 @@ def add_task(args):
         status=args.status,
         assigned_to=user.id
     )
+    save()
     print(f"Task created for project {project.id}: [{task.id}] {task.title} - {task.status}")
 
 
