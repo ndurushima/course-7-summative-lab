@@ -3,9 +3,6 @@ from models.project import Project
 from models.user import User
 from utils.storage import save, load
 
-#Global dictionary to store user projects and tasks
-users = {}
-
 def get_or_create_user(name: str, email: str) -> User:
     # naive lookup by name; use your own key if different
     for u in getattr(User, "all")():
@@ -16,11 +13,7 @@ def get_or_create_user(name: str, email: str) -> User:
 # Function to add a project
 def add_project(args):
     load()
-    if args.user not in users:
-        # Create a new user if it doesn't exist
-        users[args.user] = User(name=args.user, email=args.email)
-
-    user = users[args.user]
+    user = User.get(args.user) or User.create(name=args.user, email=args.email)
     project = Project.create(
         user_id=user.id,
         title=args.title,
@@ -33,22 +26,15 @@ def add_project(args):
 
 def add_task(args):
     load()
-    user = users.get(args.user)
+    user = User.get(args.user)
     if not user:
         print(f"User '{args.user}' does not exist.")
         return
-
-    # Make sure the project belongs to this user
-    project = next((p for p in user.projects if p.id == args.project_id), None)
-    if not project:
+    project = Project.get(args.project_id)
+    if not project or project.user_id != user.id:
         print(f"Project with ID '{args.project_id}' not found for user '{args.user}'.")
         return
-
-    task = project.add_task(
-        title=args.title,
-        status=args.status,
-        assigned_to=user.id
-    )
+    task = project.add_task(title=args.title, status=args.status, assigned_to=user.id)
     save()
     print(f"Task created for project {project.id}: [{task.id}] {task.title} - {task.status}")
 

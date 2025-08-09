@@ -47,3 +47,23 @@ class Project:
     def all(cls) -> List["Project"]:
         return list(cls._PROJECTS.values())
     
+    @classmethod
+    def to_dict(self) -> Dict:
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "user_id": self.user_id,
+            "due_date": self.due_date
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict) -> "Project":
+        return cls(
+            title=data["title"],
+            description=data["description"],
+            user_id=data["user_id"],
+            due_date=data["due_date"],
+            id=data.get("id")
+        )
+    

@@ -31,3 +31,22 @@ class Task:
     def all(cls) -> List["Task"]:
         return list(cls._TASKS.values())
     
+    @classmethod
+    def to_dict(self) -> Dict:
+        return {
+            "id": self.id,
+            "project_id": self.project_id,
+            "title": self.title,
+            "status": self.status,
+            "assigned_to": self.assigned_to
+        }
+    
+    @classmethod
+    def from_dict(cls, data: Dict) -> "Task":
+        return cls(
+            id=data.get("id"),
+            project_id=data.get("project_id"),
+            title=data.get("title"),
+            status=data.get("status"),
+            assigned_to=data.get("assigned_to")
+        )
