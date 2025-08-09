@@ -16,7 +16,7 @@ def load():
     except (JSONDecodeError, ValueError):
         db = {}
     
-    if not isinstance(db, list):
+    if isinstance(db, list):
         db = {"users": db, "projects": [], "tasks": []}
     elif not isinstance(db, dict):
         db = {}
