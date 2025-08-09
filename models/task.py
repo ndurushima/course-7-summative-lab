@@ -30,8 +30,8 @@ class Task:
     @classmethod
     def all(cls) -> List["Task"]:
         return list(cls._TASKS.values())
-    
-    @classmethod
+
+
     def to_dict(self) -> Dict:
         return {
             "id": self.id,

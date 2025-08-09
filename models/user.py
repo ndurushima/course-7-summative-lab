@@ -53,7 +53,6 @@ class User(Person):
         cls._BY_NAME.clear()
         cls._ID_COUNTER = 0
 
-    @classmethod
     def to_dict(self) -> Dict:
         return {
             "id": self.id,

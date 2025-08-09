@@ -47,7 +47,6 @@ class Project:
     def all(cls) -> List["Project"]:
         return list(cls._PROJECTS.values())
     
-    @classmethod
     def to_dict(self) -> Dict:
         return {
             "id": self.id,
